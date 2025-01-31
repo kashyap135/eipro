@@ -1,0 +1,215 @@
+// html.h
+const char html_page[] PROGMEM = R"rawliteral(
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESP32 Sensor Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 16px;
+            background: #f8fafc;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #2563eb;
+            font-size: 24px;
+            margin-bottom: 24px;
+        }
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .reading {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+            padding: 8px;
+            background: #f8fafc;
+            border-radius: 4px;
+        }
+        .label {
+            flex: 1;
+            color: #64748b;
+        }
+        .value {
+            font-weight: bold;
+            color: #2563eb;
+            min-width: 80px;
+            text-align: right;
+        }
+        .bar-container {
+            flex: 1;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            margin: 0 16px;
+            overflow: hidden;
+        }
+        .bar {
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s, background-color 0.3s;
+        }
+        .normal { background: #22c55e; }
+        .warning { background: #eab308; }
+        .danger { background: #ef4444; }
+        .fall-alert {
+            display: none;
+            background: #fee2e2;
+            border: 1px solid #ef4444;
+            color: #ef4444;
+            padding: 8px;
+            border-radius: 4px;
+            margin-top: 8px;
+            text-align: center;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            50% { opacity: 0.5; }
+        }
+        .status { margin-left: 8px; }
+        .status.normal { color: #22c55e; }
+        .status.fall { color: #ef4444; }
+        .updating::after {
+            content: '...';
+            animation: dots 1.5s infinite;
+        }
+        @keyframes dots {
+            0% { content: '.'; }
+            33% { content: '..'; }
+            66% { content: '...'; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ESP32 Sensor Data</h1>
+        
+        <div class="card">
+            <h2>ADXL345 Data</h2>
+            <div class="reading">
+                <span class="label">X-axis (Roll)</span>
+                <div class="bar-container">
+                    <div class="bar" id="roll-bar"></div>
+                </div>
+                <span class="value" id="roll">...</span>
+            </div>
+            <div class="reading">
+                <span class="label">Y-axis (Pitch)</span>
+                <div class="bar-container">
+                    <div class="bar" id="pitch-bar"></div>
+                </div>
+                <span class="value" id="pitch">...</span>
+            </div>
+            <div class="reading">
+                <span class="label">Z-axis (Yaw)</span>
+                <div class="bar-container">
+                    <div class="bar" id="yaw-bar"></div>
+                </div>
+                <span class="value" id="yaw">...</span>
+            </div>
+            <div class="reading">
+                <span class="label">Fall Status</span>
+                <span class="value status normal" id="status">Normal</span>
+            </div>
+            <div class="fall-alert" id="fallAlert">
+                ⚠️ FALL DETECTED - CHECK IMMEDIATELY!
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>DHT11 Sensor Data</h2>
+            <div class="reading">
+                <span class="label">Temperature</span>
+                <div class="bar-container">
+                    <div class="bar" id="temp-bar"></div>
+                </div>
+                <span class="value" id="temperature">...</span>
+            </div>
+            <div class="reading">
+                <span class="label">Humidity</span>
+                <div class="bar-container">
+                    <div class="bar" id="humid-bar"></div>
+                </div>
+                <span class="value" id="humidity">...</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    function updateBar(id, value, max, reverse = false) {
+        const bar = document.getElementById(id);
+        let percent = (value / max) * 100;
+        if (reverse) percent = 100 - percent;
+        bar.style.width = Math.min(100, Math.max(0, percent)) + '%';
+        
+        if (percent < 33) bar.className = 'bar normal';
+        else if (percent < 66) bar.className = 'bar warning';
+        else bar.className = 'bar danger';
+    }
+
+    function updateValue(id, value, unit = '') {
+        const el = document.getElementById(id);
+        el.textContent = (+value).toFixed(1) + unit;
+    }
+
+    function updateFallStatus(status) {
+        const statusEl = document.getElementById('status');
+        const alertEl = document.getElementById('fallAlert');
+        
+        if (status === 'Fall Detected') {
+            statusEl.textContent = status;
+            statusEl.className = 'value status fall';
+            alertEl.style.display = 'block';
+        } else {
+            statusEl.textContent = 'Normal';
+            statusEl.className = 'value status normal';
+            alertEl.style.display = 'none';
+        }
+    }
+
+    function fetchData() {
+        // Update ADXL345 data
+        fetch('/readADXL345')
+            .then(r => r.json())
+            .then(data => {
+                updateValue('roll', data[0], '°');
+                updateValue('pitch', data[1], '°');
+                updateValue('yaw', data[2], '°');
+                updateFallStatus(data[3]);
+                
+                updateBar('roll-bar', Math.abs(data[0]), 180);
+                updateBar('pitch-bar', Math.abs(data[1]), 180);
+                updateBar('yaw-bar', Math.abs(data[2]), 180);
+            });
+
+        // Update DHT11 data
+        fetch('/readDHT')
+            .then(r => r.json())
+            .then(data => {
+                updateValue('temperature', data[0], '°C');
+                updateValue('humidity', data[1], '%');
+                
+                updateBar('temp-bar', data[0], 50);
+                updateBar('humid-bar', data[1], 100);
+            });
+    }
+
+    // Initial fetch and periodic updates
+    fetchData();
+    setInterval(fetchData, 2000);
+    </script>
+</body>
+</html>
+)rawliteral";
