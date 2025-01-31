@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Group Connector</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Login Page Styles */
+        .login-container {
+            display: none;
+            height: 100vh;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            width: 400px;
+        }
+
+        .login-card h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 0.8rem;
+            background: #6e8efb;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .login-btn:hover {
+            background: #5d7ce6;
+        }
+
+        /* Home Page Styles */
+        .home-container {
+            display: none;
+            min-height: 100vh;
+            background: #f5f6fa;
+        }
+
+        .navbar {
+            background: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            color: #6e8efb;
+            font-weight: bold;
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: #666;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .icon-btn:hover {
+            color: #6e8efb;
+        }
+
+        .search-bar {
+            flex-grow: 1;
+            max-width: 500px;
+            margin: 0 2rem;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 0.5rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            outline: none;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-around;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* Profile Page Styles */
+        .profile-container {
+            display: none;
+            padding: 2rem;
+            background: #f5f6fa;
+            min-height: 100vh;
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .profile-pic {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+            background: #ddd;
+            display: inline-block;
+        }
+
+        .profile-info {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        /* Common Page Styles */
+        .page-container {
+            display: none;
+            padding: 2rem;
+            background: #f5f6fa;
+            min-height: 100vh;
+        }
+
+        .page-title {
+            color: #333;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div class="login-container" id="loginPage">
+        <div class="login-card">
+            <h2>Study Group Connector</h2>
+            <div class="input-group">
+                <input type="email" placeholder="Email" required>
+            </div>
+            <div class="input-group">
+                <input type="password" placeholder="Password" required>
+            </div>
+            <button class="login-btn" onclick="showPage('homePage')">Login</button>
+        </div>
+    </div>
+
+    <!-- Home Page -->
+    <div class="home-container" id="homePage">
+        <nav class="navbar">
+            <div class="logo">SGC</div>
+            <div class="search-bar">
+                <input type="search" placeholder="Search mentors..." onkeyup="showPage('searchPage')">
+            </div>
+            <div class="nav-icons">
+                <button class="icon-btn" onclick="showPage('invitePage')">
+                    <i class="fas fa-user-plus"></i>
+                </button>
+                <button class="icon-btn" onclick="showPage('profilePage')">
+                    <i class="fas fa-user"></i>
+                </button>
+            </div>
+        </nav>
+
+        <div class="bottom-nav">
+            <button class="icon-btn" onclick="showPage('locationPage')">
+                <i class="fas fa-map-marker-alt"></i>
+            </button>
+            <button class="icon-btn" onclick="showPage('groupAdminPage')">
+                <i class="fas fa-users-cog"></i>
+            </button>
+            <button class="icon-btn" onclick="showPage('coursesPage')">
+                <i class="fas fa-book"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Profile Page -->
+    <div class="profile-container" id="profilePage">
+        <div class="profile-header">
+            <div class="profile-pic"></div>
+            <h2>John Doe</h2>
+            <p>Male</p>
+        </div>
+        <div class="profile-info">
+            <h3>Profile Information</h3>
+            <!-- Add more profile info here -->
+        </div>
+        <button class="login-btn" style="margin-top: 2rem;" onclick="showPage('loginPage')">Logout</button>
+    </div>
+
+    <!-- Courses Page -->
+    <div class="page-container" id="coursesPage">
+        <h2 class="page-title">Available Courses</h2>
+        <div class="card">
+            <h3>Mathematics</h3>
+            <p>Advanced calculus and algebra</p>
+        </div>
+        <div class="card">
+            <h3>Physics</h3>
+            <p>Classical mechanics and thermodynamics</p>
+        </div>
+    </div>
+
+    <!-- Group Admin Page -->
+    <div class="page-container" id="groupAdminPage">
+        <h2 class="page-title">Study Group Management</h2>
+        <div class="card">
+            <h3>Create Study Group</h3>
+            <button class="login-btn" style="margin-top: 1rem;">Create New Group</button>
+        </div>
+        <div class="card">
+            <h3>Your Study Groups</h3>
+            <!-- Add study groups list here -->
+        </div>
+    </div>
+
+    <!-- Search Page -->
+    <div class="page-container" id="searchPage">
+        <h2 class="page-title">Search Mentors</h2>
+        <div class="card">
+            <h3>Available Mentors</h3>
+            <!-- Add mentor list here -->
+        </div>
+    </div>
+
+    <!-- Invite Friends Page -->
+    <div class="page-container" id="invitePage">
+        <h2 class="page-title">Invite Friends</h2>
+        <div class="card">
+            <h3>Share Study Group</h3>
+            <button class="login-btn" style="margin-top: 1rem;">Send Invitations</button>
+        </div>
+    </div>
+
+    <!-- Location Page -->
+    <div class="page-container" id="locationPage">
+        <h2 class="page-title">Nearby Study Groups</h2>
+        <div class="card">
+            <h3>Study Groups Near You</h3>
+            <!-- Add nearby groups list here -->
+        </div>
+    </div>
+
+    <script>
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.login-container, .home-container, .profile-container, .page-container')
+                .forEach(page => page.style.display = 'none');
+
+            // Show selected page
+            document.getElementById(pageId).style.display = 
+                pageId === 'homePage' ? 'block' : 
+                pageId === 'loginPage' ? 'flex' : 'block';
+        }
+
+        // Show login page initially
+        showPage('loginPage');
+    </script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+[
+  {
+    "id": 1,
+    "name": "signals and system",
+    "course": "22PCEI201",
+    "schedule": "12AM",
+    "location": "HYD",
+    "creatorId": 2,
+    "members": [
+      2,
+      4,
+      3
+    ],
+    "createdAt": "2024-11-17T05:41:20.542Z"
+  },
+  {
+    "id": 2,
+    "name": "edc",
+    "course": "ed",
+    "schedule": "23a",
+    "location": "wb",
+    "creatorId": 3,
+    "members": [
+      3,
+      2,
+      4,
+      6,
+      7
+    ],
+    "createdAt": "2024-11-17T07:31:28.446Z"
+  },
+  {
+    "id": 3,
+    "name": "mac",
+    "course": "22hs101",
+    "schedule": "122",
+    "location": "1dkm",
+    "creatorId": 3,
+    "members": [
+      3,
+      6,
+      7
+    ],
+    "createdAt": "2024-11-17T08:03:05.929Z"
+  },
+  {
+    "id": 4,
+    "name": "ode",
+    "course": "1234",
+    "schedule": "333",
+    "location": "zoom",
+    "creatorId": 4,
+    "members": [
+      4
+    ],
+    "createdAt": "2024-11-17T09:32:12.476Z"
+  },
+  {
+    "id": 5,
+    "name": "ee;e",
+    "course": "sawdsd",
+    "schedule": "sdaedq",
+    "location": "wasdawes",
+    "creatorId": 6,
+    "members": [
+      6
+    ],
+    "createdAt": "2024-11-18T04:52:11.392Z"
+  },
+  {
+    "id": 6,
+    "name": "JAVASCRIPT",
+    "course": "CSE",
+    "schedule": "12am",
+    "location": "remote",
+    "creatorId": 6,
+    "members": [
+      6,
+      7
+    ],
+    "createdAt": "2024-11-18T06:39:32.465Z",
+    "inviteToken": "b9bb8a3471fdc9b1df85d3cbb9871d78"
+  },
+  {
+    "id": 7,
+    "name": "Python",
+    "course": "it",
+    "schedule": "3pm",
+    "location": "peb",
+    "creatorId": 6,
+    "members": [
+      6,
+      7,
+      2,
+      3
+    ],
+    "createdAt": "2024-11-18T06:41:26.106Z",
+    "inviteToken": "dc0c6f1da2c22aec2a657cb8bb9be97f"
+  },
+  {
+    "id": 8,
+    "name": "DSP",
+    "course": "22EC203",
+    "schedule": "2AM",
+    "location": "remote",
+    "creatorId": 7,
+    "members": [
+      7,
+      2
+    ],
+    "createdAt": "2024-11-21T16:12:27.157Z",
+    "inviteToken": "2849ed7f199dd30669f38296e28d344e"
+  }
+]

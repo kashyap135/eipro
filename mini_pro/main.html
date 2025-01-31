@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Group Connector</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --background-color: #ffffff;
+            --text-color: #333;
+            --success-color: #4CAF50;
+            --danger-color: #dc3545;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --hover-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .nav {
+            background-color: white;
+            padding: 1rem 2rem;
+            box-shadow: var(--card-shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-brand {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+
+        .auth-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .auth-container:hover {
+            transform: translateY(-5px);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            transition: border-color 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+        }
+
+        .btn-danger:hover {
+            background-color: #861722;
+        }
+
+        .groups-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            padding: 20px;
+        }
+
+        .group-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+        }
+
+        .group-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .group-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .group-actions .btn {
+            width: auto;
+            flex: 1;
+        }
+
+        .toast-notification {
+        position: fixed;
+        top: 20px;
+        right: -300px; /* Start outside viewport */
+        background-color: #ffffff;
+        color: rgb(119, 106, 207);
+        padding: 16px 24px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        z-index: 9999;
+        transition: left 0.5s ease-in-out;
+        min-width: 300px;
+    }
+
+    .toast-notification.show {
+        right: 20px; /* Slide in to visible area */
+    }
+
+    .toast-notification i {
+        font-size: 20px;
+    }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 750px;
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 10px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .nav {
+                padding: 1rem;
+            }
+
+            .nav-brand {
+                font-size: 1.5rem;
+            }
+
+            .nav-links {
+                gap: 15px;
+            }
+
+            .groups-grid {
+                grid-template-columns: 1fr;
+                padding: 10px;
+            }
+
+   
+.auth-container {
+    display: block;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+            .group-actions {
+                flex-direction: column;
+            }
+        }
+        .groups-header {
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 30px;
+        }
+
+        .groups-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .groups-actions .btn {
+            width: auto;
+        }
+
+        .join-group-input {
+            flex-grow: 1;
+            margin-right: 15px;
+            padding: 12px;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            transition: border-color 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .join-group-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .join-group-container {
+            display: flex;
+            align-items: center;
+        }
+      
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <a href="#" class="nav-brand">StudyConnect</a>
+            <div class="nav-links">
+                <a class="nav-link" href="#groups">Study Groups</a>
+                <a class="nav-link" href="#profile">Profile</a>
+                <a class="nav-link" id="authLink" href="#login">Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Toast Notification -->
+    <div class="toast-notification" id="toast">
+        <i>✓</i>
+        <span id="toastMessage"></span>
+    </div>
+
+    <!-- Login View -->
+    <div id="loginView" class="auth-container">
+        <h2 style="text-align: center; margin-bottom: 30px; color: var(--primary-color);">Welcome Back!</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="loginEmail">Email</label>
+                <input type="email" id="loginEmail" required placeholder="Enter your email">
+            </div>
+            <div class="form-group">
+                <label for="loginPassword">Password</label>
+                <input type="password" id="loginPassword" required placeholder="Enter your password">
+            </div>
+            <button type="submit" class="btn">Login</button>
+        </form>
+        <p style="text-align: center; margin-top: 20px;">Don't have an account? <a href="#register" style="color: var(--primary-color);">Register</a></p>
+    </div>
+
+    <!-- Register View -->
+    <div id="registerView" class="auth-container hidden">
+        <h2 style="text-align: center; margin-bottom: 30px; color: var(--primary-color);">Create Account</h2>
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="registerName">Full Name</label>
+                <input type="text" id="registerName" required placeholder="Enter your full name">
+            </div>
+            <div class="form-group">
+                <label for="registerEmail">Email</label>
+                <input type="email" id="registerEmail" required placeholder="Enter your email">
+            </div>
+            <div class="form-group">
+                <label for="registerMobile">Mobile Number</label>
+                <input type="tel" id="registerMobile" required placeholder="Enter your mobile number">
+            </div>
+            <div class="form-group">
+                <label for="registerPassword">Password</label>
+                <input type="password" id="registerPassword" required placeholder="Create a password">
+            </div>
+            <div class="form-group">
+                <label for="Major">Major</label>
+                <input type="text" id="Major" required placeholder="Enter your Major">
+            </div>
+            <button type="submit" class="btn">Register</button>
+        </form>
+        <p style="text-align: center; margin-top: 20px;">Already have an account? <a href="#login" style="color: var(--primary-color);">Login</a></p>
+    </div>
+
+    <!-- Groups View -->
+    <div id="groupsView" class="container hidden">
+        <div class="groups-header">
+            <h2 style="color: var(--primary-color); font-size: 1.8rem;">Study Groups</h2>
+            <div class="groups-actions">
+                <div class="join-group-container">
+                    <input type="text" id="groupInviteLink" class="join-group-input" placeholder="Paste invite link here">
+                    <button onclick="Router.joinGroupFromLink()" class="btn">Join Group</button>
+                </div>
+                <button class="btn" onclick="showCreateGroupModal()">Create New Group</button>
+            </div>
+        </div>
+        <div class="groups-grid" id="groupsGrid">
+            <!-- Groups will be dynamically added here -->
+        </div>
+
+    <!-- Profile View -->
+    <div id="profileView" class="auth-container hidden">
+        <div id="profileView" class="auth-container" style="display: block; visibility: visible;">
+           
+        <h2 style="text-align: center; margin-bottom: 30px; color: var(--primary-color);">Your Profile</h2>
+        <div class="form-group">
+            <label for="profileName">Name</label>
+            <input type="text" id="profileName" placeholder="Your name">
+        </div>
+        <div class="form-group">
+            <label for="profileEmail">Email</label>
+            <input type="email" id="profileEmail" readonly>
+        </div>
+        <div class="form-group">
+            <label for="profileMobile">Mobile Number</label>
+            <input type="tel" id="profileMobile" placeholder="Your mobile number">
+        </div>
+        <div class="form-group">
+            <label for="profileMajor">Major</label>
+            <input type="text" id="profileMajor" placeholder="Your major">
+        </div>
+        <button onclick="saveProfile()" class="btn">Save Changes</button>
+    </div>
+
+    <!-- Create Group Modal -->
+    <div id="createGroupModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 style="color: var(--primary-color); margin-bottom: 20px;">Create New Study Group</h2>
+            <form id="createGroupForm">
+                <div class="form-group">
+                    <label for="groupName">Course Name</label>
+                    <input type="text" id="groupName" required placeholder="Enter course/group name">
+                </div>
+                <div class="form-group">
+                    <label for="groupCourse">Course</label>
+                    <input type="text" id="groupCourse" required placeholder="Enter course code">
+                </div>
+                <div class="form-group">
+                    <label for="groupSchedule">Schedule</label>
+                    <input type="text" id="groupSchedule" required placeholder="Enter meeting schedule">
+                </div>
+                <div class="form-group">
+                    <label for="groupLocation">Location</label>
+                    <input type="text" id="groupLocation" required placeholder="Enter meeting location">
+                </div>
+
+             <h2>Invite Link</h2>
+             <p id="inviteLinkContainer"></p>
+                <button type="submit" class="btn">Create Group</button>
+            </form>
+                   </div>    
+    </div>
+
+    <script>
+        // App State
+        const AppState = {
+            currentUser: JSON.parse(localStorage.getItem('currentUser')) || null,
+            users: [],
+            groups: [],
+        };
+
+        const Router = {
+    init() {
+        const savedUser = localStorage.getItem('currentUser');
+        if (savedUser) {
+            AppState.currentUser = JSON.parse(savedUser);
+        }
+        
+        this.checkAuthState();
+        window.addEventListener('hashchange', () => this.handleRoute());
+        this.handleRoute();
+        
+        // Check for invite link on page load
+        this.handleInviteLink();
+    },
+    
+    checkAuthState() {
+        const authLink = document.getElementById('authLink');
+        const isAuthenticated = AppState.currentUser || localStorage.getItem('currentUser');
+        
+        if (isAuthenticated) {
+            authLink.textContent = 'Logout';
+            authLink.onclick = () => this.handleLogout();
+            authLink.href = '#';
+        } else {
+            authLink.textContent = 'Login';
+            authLink.onclick = null;
+            authLink.href = '#login';
+        }
+    },
+    
+    handleRoute() {
+        const hash = window.location.hash.slice(1) || 'login';
+        const isAuthenticated = AppState.currentUser || localStorage.getItem('currentUser');
+        
+        // Check for direct invite link
+        if (hash.startsWith('invite/')) {
+            this.handleDirectInviteLink();
+            return;
+        }
+        
+        if (!isAuthenticated && !['login', 'register'].includes(hash)) {
+            window.location.hash = 'login';
+            return;
+        }
+        this.showView(hash);
+    },
+    
+    showView(viewName) {
+                const views = ['login', 'register', 'groups', 'profile'];
+                views.forEach(view => {
+                    document.getElementById(view + 'View').classList.add('hidden');
+                });
+                document.getElementById(viewName + 'View').classList.remove('hidden');
+
+                if (viewName === 'groups') {
+                    loadGroups();
+                } else if (viewName === 'profile') {
+                    loadProfile();
+                }
+            },
+    
+    handleLogout() {
+        AppState.currentUser = null;
+        localStorage.removeItem('currentUser');
+        this.checkAuthState();
+        window.location.hash = 'login';
+        showToast('Logged out successfully');
+    },
+    
+    handleInviteLink() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const inviteToken = urlParams.get('invite');
+        if (inviteToken) {
+            // If user is not logged in, redirect to login with invite token
+            if (!AppState.currentUser) {
+                window.location.hash = 'login';
+                localStorage.setItem('pendingInviteToken', inviteToken);
+                return;
+            }
+            // If user is logged in, attempt to join group
+            this.joinGroupByInviteToken(inviteToken);
+        }
+    },
+    
+    async handleDirectInviteLink() {
+        const inviteToken = window.location.hash.split('invite/')[1];
+        
+        // If no user logged in, store token and redirect to login
+        if (!AppState.currentUser) {
+            localStorage.setItem('pendingInviteToken', inviteToken);
+            window.location.hash = 'login';
+            return;
+        }
+        
+        // If user is logged in, attempt to join group immediately
+        await this.joinGroupByInviteToken(inviteToken);
+    },
+    
+    async joinGroupByInviteToken(token) {
+        try {
+            const response = await fetch(`http://localhost:3000/api/groups/invite/${token}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ userId: AppState.currentUser.id })
+            });
+            const data = await response.json();
+            if (data.message === 'Successfully joined the group') {
+                showToast('Successfully joined the group via invite link!');
+                window.location.hash = 'groups';
+                loadGroups();
+            } else {
+                showToast(data.message || 'Failed to join group');
+            }
+        } catch (error) {
+            console.error(error);
+            showToast('Error joining group');
+        }
+    },
+    
+    joinGroupFromLink: async function() {
+        const inviteLink = document.getElementById('groupInviteLink').value.trim();
+        
+        // Extract token from the invite link
+        const inviteToken = inviteLink.split('invite/')[1] || inviteLink;
+        
+        if (!inviteToken) {
+            showToast('Invalid invite link');
+            return;
+        }
+        
+        if (!AppState.currentUser) {
+            showToast('Please log in first');
+            return;
+        }
+        
+        await this.joinGroupByInviteToken(inviteToken);
+    }
+};
+
+        // Toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            
+            // Clear any existing timeouts
+            if (toast.timeoutId) {
+                clearTimeout(toast.timeoutId);
+            }
+            
+            // Update message and show toast
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            
+            // Hide toast after delay
+            toast.timeoutId = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+        // Authentication (Login)
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    try {
+        const response = await fetch('http://localhost:3000/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+        const data = await response.json();
+        
+        if (response.status === 401) {
+            showToast('Invalid login credentials');
+            return;
+        }
+        
+        if (data.message === 'Login successful') {
+            AppState.currentUser = data.user;
+            localStorage.setItem('currentUser', JSON.stringify(data.user));
+            Router.checkAuthState();
+            showToast('Successfully logged in!');
+            
+            // Check for pending invite token
+            const pendingInviteToken = localStorage.getItem('pendingInviteToken');
+            if (pendingInviteToken) {
+                localStorage.removeItem('pendingInviteToken');
+                Router.joinGroupByInviteToken(pendingInviteToken);
+            } else {
+                window.location.hash = 'groups';
+            }
+        } else {
+            showToast('Invalid login credentials');
+        }
+    } catch (error) {
+        console.error(error);
+        showToast('Error logging in');
+    }
+});
+        // Register form
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const mobile = document.getElementById('registerMobile').value;
+            const password = document.getElementById('registerPassword').value;
+            const Major = document.getElementById('Major').value;
+
+            try {
+                const response = await fetch('http://localhost:3000/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, mobile, password, Major })
+                });
+                const data = await response.json();
+
+                if (data.message === 'User registered successfully!') {
+                    showToast('Registration successful! Please login.');
+                    window.location.hash = 'login';
+                } else {
+                    showToast('Registration failed: ' + data.message);
+                }
+            } catch (error) {
+                console.error(error);
+                showToast('Error during registration');
+            }
+        });
+
+        // Load Groups
+        async function loadGroups() {
+    const groupsGrid = document.getElementById('groupsGrid');
+    groupsGrid.innerHTML = '';
+
+    try {
+        const response = await fetch('http://localhost:3000/api/groups', {
+            headers: {
+                'Authorization': `Bearer ${AppState.currentUser?.token}`
+            }
+        });
+        
+        if (response.status === 401) {
+            Router.handleLogout();
+            return null;
+        }
+
+        const data = await response.json();
+        
+        if (data.groups) {
+            data.groups.forEach(group => {
+                groupsGrid.appendChild(createGroupElement(group));
+            });
+        }
+        
+        return data.groups || [];
+    } catch (error) {
+        console.error(error);
+        showToast('Error loading groups');
+        return null;
+    }
+}
+
+// Helper function to create group element
+function createGroupElement(group) {
+    const isUserInGroup = group.members.includes(AppState.currentUser.id);
+    const groupElement = document.createElement('div');
+    groupElement.className = 'group-card';
+    groupElement.id = `group-${group.id}`;
+    groupElement.innerHTML = `
+        <h3>${group.name}</h3>
+        <div class="group-info">
+            <p><strong>Course:</strong> ${group.course}</p>
+            <p><strong>Schedule:</strong> ${group.schedule}</p>
+            <p><strong>Location:</strong> ${group.location}</p>
+            <p><strong>Members:</strong> ${group.members.length}</p>
+        </div>
+        <div class="group-actions">
+            <button class="btn" onclick="copyGroupInviteLink(${group.id})">Get Invite Link</button>
+            ${isUserInGroup ? 
+                `<button class="btn btn-danger" onclick="leaveGroup(${group.id})">Leave Group</button>` :
+                `<button class="btn" onclick="joinGroup(${group.id})">Join Group</button>`
+            }
+        </div>
+    `;
+    return groupElement;
+}
+
+// Add this new function to generate and copy invite link
+async function copyGroupInviteLink(groupId) {
+    try {
+        const response = await fetch(`http://localhost:3000/api/groups/${groupId}/invite`);
+        const data = await response.json();
+        
+        if (data.inviteLink) {
+            // Copy to clipboard
+            navigator.clipboard.writeText(data.inviteLink).then(() => {
+                showToast('Invite link copied to clipboard!');
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        showToast('Error generating invite link');
+    }
+}
+
+
+        // Join Group
+        async function joinGroup(groupId) {
+    if (!AppState.currentUser) {
+        showToast('Please login to join a group');
+        window.location.hash = 'login';
+        return;
+    }
+
+    // Optimistically update UI
+    const groupCard = document.getElementById(`group-${groupId}`);
+    const groupActions = groupCard.querySelector('.group-actions');
+    const membersCount = groupCard.querySelector('.group-info p:last-child');
+    const currentCount = parseInt(membersCount.textContent.match(/\d+/)[0]);
+    
+    groupActions.innerHTML = `<button class="btn btn-danger" onclick="leaveGroup(${groupId})">Leave Group</button>`;
+    membersCount.innerHTML = `<strong>Members:</strong> ${currentCount + 1}`;
+
+    try {
+        const response = await fetch('http://localhost:3000/api/groups/join', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${AppState.currentUser.token}`
+            },
+            body: JSON.stringify({ 
+                groupId, 
+                userId: AppState.currentUser.id 
+            })
+        });
+
+        if (response.status === 401) {
+            Router.handleLogout();
+            return;
+        }
+
+        const data = await response.json();
+
+        if (data.message === 'User added to group') {
+            showToast('Successfully joined group!');
+        } else {
+            // Revert UI if request failed
+            groupActions.innerHTML = `<button class="btn" onclick="joinGroup(${groupId})">Join Group</button>`;
+            membersCount.innerHTML = `<strong>Members:</strong> ${currentCount}`;
+            showToast(data.message || 'Failed to join group');
+        }
+    } catch (error) {
+        // Revert UI on error
+        groupActions.innerHTML = `<button class="btn" onclick="joinGroup(${groupId})">Join Group</button>`;
+        membersCount.innerHTML = `<strong>Members:</strong> ${currentCount}`;
+        console.error(error);
+        showToast('Error joining group');
+    }
+}
+
+
+        // Leave Group
+        async function leaveGroup(groupId) {
+    if (!AppState.currentUser) {
+        showToast('Please login first');
+        window.location.hash = 'login';
+        return;
+    }
+
+    // Optimistically update UI
+    const groupCard = document.getElementById(`group-${groupId}`);
+    const groupActions = groupCard.querySelector('.group-actions');
+    const membersCount = groupCard.querySelector('.group-info p:last-child');
+    const currentCount = parseInt(membersCount.textContent.match(/\d+/)[0]);
+    
+    groupActions.innerHTML = `<button class="btn" onclick="joinGroup(${groupId})">Join Group</button>`;
+    membersCount.innerHTML = `<strong>Members:</strong> ${currentCount - 1}`;
+
+    try {
+        const response = await fetch('http://localhost:3000/api/groups/leave', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${AppState.currentUser.token}`
+            },
+            body: JSON.stringify({ 
+                groupId, 
+                userId: AppState.currentUser.id 
+            })
+        });
+
+        if (response.status === 401) {
+            Router.handleLogout();
+            return;
+        }
+
+        const data = await response.json();
+
+        if (data.message === 'User removed from group') {
+            showToast('Successfully left the group');
+        } else {
+            // Revert UI if request failed
+            groupActions.innerHTML = `<button class="btn btn-danger" onclick="leaveGroup(${groupId})">Leave Group</button>`;
+            membersCount.innerHTML = `<strong>Members:</strong> ${currentCount}`;
+            showToast(data.message || 'Failed to leave group');
+        }
+    } catch (error) {
+        // Revert UI on error
+        groupActions.innerHTML = `<button class="btn btn-danger" onclick="leaveGroup(${groupId})">Leave Group</button>`;
+        membersCount.innerHTML = `<strong>Members:</strong> ${currentCount}`;
+        console.error(error);
+        showToast('Error leaving group');
+    }
+}
+
+        // Create Group Modal
+        function showCreateGroupModal() {
+            if (!AppState.currentUser) {
+                showToast('Please login to create a group');
+                window.location.hash = 'login';
+                return;
+            }
+            document.getElementById('createGroupModal').style.display = 'block';
+        }
+
+        // Close Modal
+        function closeModal() {
+            document.getElementById('createGroupModal').style.display = 'none';
+        }
+
+        // Modal click outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('createGroupModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        };
+
+        // Close button
+        document.querySelector('.close').onclick = closeModal;
+
+        // Create Group Form
+        document.getElementById('createGroupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!AppState.currentUser) {
+                showToast('Please login to create a group');
+                window.location.hash = 'login';
+                return;
+            }
+
+            const newGroup = {
+                name: document.getElementById('groupName').value,
+                course: document.getElementById('groupCourse').value,
+                schedule: document.getElementById('groupSchedule').value,
+                location: document.getElementById('groupLocation').value,
+                creatorId: AppState.currentUser.id
+            };
+
+            try {
+                const response = await fetch('http://localhost:3000/api/groups', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${AppState.currentUser.token}`
+                    },
+                    body: JSON.stringify(newGroup)
+                });
+
+                if (response.status === 401) {
+                    Router.handleLogout();
+                    return;
+                }
+
+                const data = await response.json();
+
+                if (data.message === 'Group created successfully!') {
+                    showToast('Group created successfully');
+                    loadGroups();
+                    closeModal();
+                    document.getElementById('createGroupForm').reset();
+                } else {
+                    showToast('Failed to create group');
+                }
+            } catch (error) {
+                console.error(error);
+                showToast('Error creating group');
+            }
+        });
+
+        // Load Profile
+                    async function loadProfile() {
+                        console.log('LoadProfile called');
+    console.log('Current User:', AppState.currentUser);
+    if (!AppState.currentUser) {
+        showToast('Please login to view profile');
+        window.location.hash = 'login';
+        return;
+    }
+
+    try {
+        const response = await fetch(`http://localhost:3000/api/profile/${AppState.currentUser.id}`, {
+            headers: {
+                'Authorization': `Bearer ${AppState.currentUser.token}`
+            }
+        });
+
+        if (response.status === 401) {
+            Router.handleLogout();
+            return;
+        }
+
+        const data = await response.json();
+        console.log('Profile Data:', data);
+
+        // Debug: Check all view elements
+        const profileView = document.getElementById('profileView');
+        console.log('Profile View Element:', profileView);
+        console.log('Profile View Classes:', profileView.classList);
+        console.log('Profile View Style:', profileView.style.display);
+
+        // Try multiple ways to show the view
+        profileView.classList.remove('hidden');
+        profileView.style.display = 'block';
+        profileView.style.visibility = 'visible';
+
+        const nameInput = document.getElementById('profileName');
+        const emailInput = document.getElementById('profileEmail');
+        const mobileInput = document.getElementById('profileMobile');
+        const majorInput = document.getElementById('profileMajor');
+
+        if (nameInput) nameInput.value = data.user.name;
+        if (emailInput) emailInput.value = data.user.email;
+        if (mobileInput) mobileInput.value = data.user.mobile;
+        if (majorInput) majorInput.value = data.user.Major;
+
+    } catch (error) {
+        console.error('Profile Loading Error:', error);
+        showToast('Error loading profile');
+    }
+}
+        // Save Profile
+        async function saveProfile() {
+            if (!AppState.currentUser) {
+                showToast('Please login to update profile');
+                window.location.hash = 'login';
+                return;
+            }
+
+            const updatedProfile = {
+                name: document.getElementById('profileName').value,
+                mobile: document.getElementById('profileMobile').value,
+                Major: document.getElementById('profileMajor').value
+            };
+
+            try {
+                const response = await fetch(`http://localhost:3000/api/profile/${AppState.currentUser.id}`, {
+                    method: 'PUT',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${AppState.currentUser.token}`
+                    },
+                    body: JSON.stringify(updatedProfile)
+                });
+
+                if (response.status === 401) {
+                    Router.handleLogout();
+                    return;
+                }
+
+                const data = await response.json();
+
+                if (data.message === 'Profile updated successfully') {
+                    AppState.currentUser = { ...AppState.currentUser, ...updatedProfile };
+                    localStorage.setItem('currentUser', JSON.stringify(AppState.currentUser));
+                    showToast('Profile updated successfully');
+                } else {
+                    showToast('Failed to update profile');
+                }
+            } catch (error) {
+                console.error(error);
+                showToast('Error updating profile');
+            }
+        }
+
+        // Initialize the app
+        Router.init();
+    </script>
+</body>
+</html>

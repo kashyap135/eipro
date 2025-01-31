@@ -1,0 +1,66 @@
+[
+  {
+    "id": 1,
+    "name": "ganesh",
+    "email": "gk@gmail.com",
+    "mobile": "8247567314",
+    "password": "$2b$10$nsNm2VyomtnDVNK0t/LWze64aFlZS7/LrPt45AcFkdFkazB36L.Ri",
+    "Major": "ds"
+  },
+  {
+    "id": 2,
+    "name": "kashyap1",
+    "email": "kashyap@gmail.com",
+    "mobile": "824767314",
+    "password": "kashyap",
+    "Major": "EIE"
+  },
+  {
+    "id": 3,
+    "name": "vascodagama",
+    "email": "v@gmail.com",
+    "mobile": "8348",
+    "password": "v@123",
+    "Major": "TR"
+  },
+  {
+    "id": 4,
+    "name": "eIe",
+    "email": "eie@gmail.com",
+    "mobile": "1234565322",
+    "password": "eie@123",
+    "Major": "EcE"
+  },
+  {
+    "id": 5,
+    "name": "cse",
+    "email": "cse@gmail.com",
+    "mobile": "1234567890",
+    "password": "Eie@123",
+    "Major": "eie"
+  },
+  {
+    "id": 6,
+    "name": "eie34",
+    "email": "eie3@gmail.com",
+    "mobile": "8242232331223",
+    "password": "sara@123",
+    "Major": "fd"
+  },
+  {
+    "id": 7,
+    "name": "kashyap",
+    "email": "ka@gmail.com",
+    "mobile": "8787865432",
+    "password": "saran@135",
+    "Major": "CSE"
+  },
+  {
+    "id": 8,
+    "name": "ganesh",
+    "email": "vinayaka@gmail.com",
+    "mobile": "878728627",
+    "password": "ganesh@123",
+    "Major": "SANSKRIT"
+  }
+]

@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "name": "kashyap",
+    "email": "gsk@gmail.com",
+    "mobile": "546282524",
+    "password": "gsk@123",
+    "Major": "DS"
+  },
+  {
+    "id": 2,
+    "name": "kashyap",
+    "email": "k@123",
+    "mobile": "765223",
+    "password": "kas",
+    "Major": "kas"
+  }
+]
