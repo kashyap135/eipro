@@ -22,10 +22,10 @@ const char* ssid = ".x";
 const char* password = "kashyap1";
 
 // Twilio credentials
-const char* twilio_sid = "ACf54ffde90d67ba8df21ae00ab8dc511b";
-const char* twilio_auth  = "8547c3f2e1806b47a59bf9763ba62113";
-String from_number      = "+19253694102";  // Twilio phone number
-String to_number        = "+918247567314";  // Your mobile number
+const char* twilio_sid = "";
+const char* twilio_auth  = "";
+String from_number      = "";  // Twilio phone number
+String to_number        = "";  // Your mobile number
 
 // Web server on port 80
 WebServer server(80);
