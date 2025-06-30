@@ -18,8 +18,8 @@ bool waitingForCancel = false;
 unsigned long fallTriggerTime = 0;
 bool fallCanceledViaWeb = false;
 
-const char* ssid = ".x";
-const char* password = "kashyap1";
+const char* ssid = "";
+const char* password = "";
 
 // Twilio credentials
 
