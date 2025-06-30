@@ -22,8 +22,8 @@ const char* ssid = ".x";
 const char* password = "kashyap1";
 
 // Twilio credentials
-const char* twilio_sid = "";
-const char* twilio_auth  = "";
+const char* twilio_sid = "ur key";
+const char* twilio_auth  = "token";
 String from_number      = "";  // Twilio phone number
 String to_number        = "";  // Your mobile number
 
